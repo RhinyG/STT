@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotParts.movement.PID2Point;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -12,13 +14,13 @@ public class pidFollower {
     PIDController drive = new PIDController(driveP, driveI, driveD), rotate = new PIDController(rotateP,rotateI,rotateD);
     double[] position;
 
-    /* *
+    /**
      * This is the constructor.
      * @param opmode is opmode from a LinearOpMode file
      */
     public pidFollower(LinearOpMode opmode) {
         telemetry = opmode.telemetry;
-        //TODO: multipleTelemetry
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
     //TODO: documentation
     public double[] followPID(double x, double y, double heading) {

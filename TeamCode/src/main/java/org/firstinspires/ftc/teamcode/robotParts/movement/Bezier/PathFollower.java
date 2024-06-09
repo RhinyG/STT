@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.robotParts.movement.Bezier;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 public class PathFollower {
     PathBuilder path = new PathBuilder(this);
     double[] coordinate, derivative, sec_derivative;
@@ -11,7 +9,7 @@ public class PathFollower {
     double[] robot_position = new double[]{80,80}; //TODO: Omzetten naar realtime positie
     double d2;
     double Fcent, Ftrans, Fcorr;
-    double Fcent_weight, Ftrans_weigth;
+    double Fcent_weight, Ftrans_weight;
     double v_robot = 5; //TODO: Omzetten naar realtime snelheid
     double robotHeading = 45; //TODO: Omzetten naar realtime heading
     public void followPath(double[][] controlPoints) {

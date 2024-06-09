@@ -106,6 +106,7 @@ public abstract class RobotPart extends LinearOpMode {
     //TODO: calibrateEncoders
     //TODO: stop
     //TODO: checkDirection
+    //TODO: Lynx module method
     //TODO: what on earth does this do
     public void telem(DcMotorEx motor) {
         telemetry.addData("" + motor, motor);

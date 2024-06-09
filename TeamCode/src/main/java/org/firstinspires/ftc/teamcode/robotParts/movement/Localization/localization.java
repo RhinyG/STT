@@ -26,10 +26,9 @@ public class localization {
             TICKS_PER_ROTATION = 8192,
             odoMultiplier = (72/38.6),
             ticksPerCM = odoMultiplier*(TICKS_PER_ROTATION)/(2*Math.PI * GEAR_RATIO * WHEEL_RADIUS); //about 690 ticks per centimeter
-    //pos is in ticks, public because of the tuner file.
-    public double currentLPos,currentRPos,currentBPos;
-    //These are in centimeters or radians.
-    double oldX,oldY,oldTheta,currentX,currentY,currentTheta,oldLPos,oldRPos,oldBPos,dL,dR,dB,relDX,relDY,rSTR,rFWD,dForward,dTheta,dStrafe;
+    //Pos are in ticks, the rest are in centimeters or radians.
+    double currentLPos,currentRPos,currentBPos,oldX,oldY,oldTheta,currentX,currentY,currentTheta,oldLPos,oldRPos,oldBPos,dL,dR,dB,relDX,relDY,rSTR,rFWD,dForward,dTheta,dStrafe,oldTime,currentTime;
+
     /**
      * <i>Based on <a href="https://www.youtube.com/watch?v=ixsxDn_ddLE&t=3s">The Clueless | Intro to Odometry</a>.</i>
      * <p>This is the Constant Velocity Arc Localization algorithm STT uses. It uses three odometry wheels and no IMU. There is some line by line documentation
@@ -38,8 +37,8 @@ public class localization {
      * <p>It is very important to spend enough time on your tuning. If the earlier steps are not accurate, the later steps also won't be.</p><p></p>
      * <h3>Step 0</h3>
      * <p>Get a caliper and add values for Lx, Ly, Rx, Ry, Bx, By. Also add values for your gear ratio, ticks per rotation and (odometry) wheel radius.
-     * This values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.</p><p></p>
-     * <h3>Step 1</h3>
+     * These values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.</p><p></p>
+     * <h3><a href="#getPositionsTune()">Step 1</a></h3>
      * <p>Equal your odometers to the motors they're plugged into. Check if the odometer directions are good.
      * If you move the wheels manually, do they increase like they should, or do they decrease?
      * If so, you need to add or remove a negative before the Odo.getCurrentPosition.</p><p></p>
@@ -47,16 +46,17 @@ public class localization {
      * <p>If step 1 has been tuned correctly, you can now drag the robot forward and get a semi-reasonable X value.
      * The next step is to roll the robot forward, preferably more than several meters, and check with a tape measure how close the variable is to reality.
      * To tune this, you need to change the odoMultiplier variable. You really want to get this to less than 1% error.</p><p></p>
-     * <h3>Step 2</h3>
+     * TODO: if too large, make odoMultiplier bigger/smaller (also add this to README.md and LocalizationTuner.java).
+     * <h3>Step 3</h3>
      * <p>The next step is to get the real value for your track width (Ly - Ry). One method is to rotate the robot 10 or 20 times,
      * and compare how much your theta is versus how much it should be. If the number is too small, your track width needs to decrease.</p><p></p>
-     * <h3>Step 3</h3>
+     * <h3>Step 4</h3>
      * <p>The next step is to get the real value for your Bx. Rotate the robot a full rotation, which should mean your back encoder is in the same spot as it started.
      * If your Y value does not return to zero, Bx needs to be changed. If Y is too high, increase/decrease Bx.</p><p></p>
+     * TODO: if too large increase/decrease Bx (also add this to README.md and LocalizationTuner.java).
      * @return An array containing the global X and Y coordinates and heading of the robot on the field.
      */
     public double[] arcVelocity() {
-        //TODO: calculate velocity
         //Moves the current values to the old ones.
         oldTheta = currentTheta;
         oldX = currentX;
@@ -64,11 +64,11 @@ public class localization {
         oldLPos = currentLPos;
         oldRPos = currentRPos;
         oldBPos = currentBPos;
+        oldTime = currentTime;
 
         //Updates the current values (should be via a Bulk read).
-        currentLPos = leftOdo.getCurrentPosition();
-        currentRPos = -rightOdo.getCurrentPosition();
-        currentBPos = -backOdo.getCurrentPosition();
+        getPositions();
+        currentTime = System.currentTimeMillis();
 
         //Translates a position in ticks into a delta in centimeters.
         dR = (currentRPos - oldRPos) / ticksPerCM;
@@ -81,7 +81,6 @@ public class localization {
         dTheta = (dR - dL)/(L[1] - R[1]);
         //Robot centric variable that calculates the delta strafe, correcting for the turn.
         dStrafe = dB - B[0] * dTheta;
-
         //If dTheta == 0, revert to linearLocalization because then you have a circle with infinite diameter, which it can't (because it divides by zero).
         // Luckily a circle with infinite diameter is just a line. Realistically this probably won't happen, but it's always good to catch the error.
         if (dTheta == 0) {
@@ -97,10 +96,11 @@ public class localization {
         }
 
         //Add the delta's to your current position and return those.
+        //The fourth term is the current velocity in meters/second. Since the distance is in centimeters and time in millimeters, a (100)/(1/1000) = 10 term is added.
         currentTheta = oldTheta + dTheta;
         currentX = oldX + relDX * Math.cos(currentTheta) - relDY * Math.sin(currentTheta);
         currentY = oldY + relDY * Math.cos(currentTheta) - relDX * Math.sin(currentTheta);
-        return new double[] {currentX, currentY, currentTheta};
+        return new double[] {currentX, currentY, currentTheta, 10*Math.sqrt(Math.pow(relDX,2)+Math.pow(relDY,2))/(currentTime-oldTime)};
     }
 
     /**
@@ -135,5 +135,24 @@ public class localization {
         currentY = oldY + relDY * Math.cos(currentTheta) - relDX * Math.sin(currentTheta);
 
         return new double[] {currentX, currentY, currentTheta};
+    }
+
+    /**
+     * This method is used by ArcLocalizationTuner.java.
+     * It is step one of the tuning process.
+     * @see <a href="#arcVelocity()">arcVelocity()</a>
+     */
+    public double[] getPositionsTune() {
+        getPositions();
+        return new double[] {currentLPos,currentRPos,currentBPos};
+    }
+
+    /**
+     * Updates the current values (should be via a Bulk read).
+     */
+    public void getPositions() {
+        currentLPos = -leftOdo.getCurrentPosition();
+        currentRPos = rightOdo.getCurrentPosition();
+        currentBPos = backOdo.getCurrentPosition();
     }
 }

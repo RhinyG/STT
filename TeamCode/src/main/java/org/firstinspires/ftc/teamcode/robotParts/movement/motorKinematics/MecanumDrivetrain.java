@@ -29,7 +29,7 @@ public class MecanumDrivetrain extends RobotPart {
     double yL,yR,minYValue,powerMultiplier,maxPower;
     double[]
             motorPowers = {0,0,0,0},
-            LVector,RVector,sumVector;
+            LVector,RVector,sumVector = {0,0};
 
     public MecanumDrivetrain(LinearOpMode opmode) {
         telemetry = opmode.telemetry;
@@ -112,11 +112,17 @@ public class MecanumDrivetrain extends RobotPart {
         RVector[0] *= minYValue / yR;
 
         // This code adds the vectors together. To do this easily, you need cartesian coordinates.
-        // The theta should be exactly the drivePower theta, but r might differ.
+        sumVector = toPolar(LVector[0]*Math.cos(LVector[1])+RVector[0]*Math.cos(RVector[1]),LVector[0]*Math.sin(LVector[1])+RVector[0]*Math.sin(RVector[1]));
+        //Alternative sumVector from https://www.youtube.com/watch?v=vr71A_UFt0A. No clue if this is more efficient or not.
+//        sumVector[1] = RVector[1]-LVector[1]+Math.PI;
+//        sumVector[0] = Math.sqrt(LVector[0]*LVector[0]*RVector[0]*RVector[0]-2*LVector[0]*RVector[0]*Math.cos(sumVector[1]));
+//        sumVector[1] = Math.asin(RVector[0]*Math.sin(sumVector[1])/sumVector[0]);
+
+        // SumVector theta should be exactly the drivePower theta, but r might differ.
         // We then multiply by that difference, so that the sumVector is completely equal to the driveVector.
         // I have a feeling you can delete or optimise this bit, because we correct for the same thing again later and the drive vectors aren't changed from the beginning.
-        // TODO: check wisD book for way to add polar coordinates to one another.
-        sumVector = toPolar(LVector[0]*Math.cos(LVector[1])+RVector[0]*Math.cos(RVector[1]),LVector[0]*Math.sin(LVector[1])+RVector[0]*Math.sin(RVector[1]));
+        // If you can delete this, do, because the calculation sucks.
+        //TODO: can you live without this correction
         powerMultiplier = drivePower[0]/sumVector[0];
         LVector[0] = LVector[0] * powerMultiplier;
         RVector[0] = RVector[0] * powerMultiplier;

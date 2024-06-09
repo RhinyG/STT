@@ -34,7 +34,7 @@ public class DifferentialDrivetrain extends RobotPart {
     /**
      * This methods initialises the swerve drivetrain and the IMU and sets all the directions and modes to their correct settings.
      */
-    //TODO: split into initAutonomous en initTeleOp
+    //TODO: parameter boolean TeleOp
     public void initRobot(HardwareMap hardwareMap) {
         DTMotors = new DcMotorEx[]{FrontB, FrontR, BackB, BackR};
         for (int i = 0; i < DTMotors.length; i++) {
@@ -50,8 +50,7 @@ public class DifferentialDrivetrain extends RobotPart {
 
         initIMU(hardwareMap);
     }
-    //TODO: documentation
-    //TODO: in EN, then delete
+    //TODO: in EN (with documentation), then delete
     public void simple(){
         double FWDB = myOpMode.gamepad1.left_stick_y;
         double ROTB = -0.55 * myOpMode.gamepad1.left_stick_x;

@@ -43,7 +43,7 @@ It is very important to spend enough time on your tuning. If the earlier steps a
 
 Get a caliper and add values for Lx, Ly, Rx, Ry, Bx, By. Also add values for your gear ratio, ticks per rotation and (odometry) wheel radius.
 
-This values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.
+These values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.
 
 * Step 1
 

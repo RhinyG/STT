@@ -33,7 +33,7 @@ public class CoaxialDrivetrain extends RobotPart {
     /**
      * This methods initialises the swerve drivetrain and the IMU and sets all the directions and modes to their correct settings.
      */
-    //TODO: split into initAutonomous en initTeleOp
+    //TODO: parameter boolean TeleOp
     public void initRobot(HardwareMap map) {
         DTMotors = new DcMotorEx[]{FrontL, FrontR, BackL, BackR};
         for (int i = 0; i < DTMotors.length; i++) {

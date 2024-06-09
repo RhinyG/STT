@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.util.List;
-
+//TODO: delete if tuner file works
 @Config
 @TeleOp(name = "Mecanum drive Test", group = "Tests")
 public class MecanumDriveTest extends LinearOpMode {

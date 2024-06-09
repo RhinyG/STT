@@ -37,6 +37,7 @@ public class MecanumDriveTuner extends LinearOpMode {
         while (opModeIsActive()) {
             switch (state) {
                 case 0:
+                    telemetry.addLine("To test your tuning, press B/○");
                     telemetry.addLine("To start tuning, press X/□");
                     telemetry.addLine("This will turn on all motors to power 0.3. They should all drive forwards.");
                     telemetry.addLine("If they don't, reverse motors in init() until they do.");
@@ -45,6 +46,9 @@ public class MecanumDriveTuner extends LinearOpMode {
                         for (DcMotorEx motor : new DcMotorEx[]{drive.FrontL, drive.FrontR, drive.BackL, drive.BackR}) {
                             motor.setPower(0.3);
                         }
+                    }
+                    if (gamepad1.b) {
+                        state = 6;
                     }
                 case 1:
                     telemetry.addLine("If all motors are going forwards, press Y/△");
@@ -76,6 +80,12 @@ public class MecanumDriveTuner extends LinearOpMode {
                     }
                 case 5:
                     telemetry.addLine("You should now have a working drivetrain, and two speeds. Fill in those speeds at MecanumDrivetrain.java:20, y first, then x.");
+                case 6:
+                    driveVector = drive.toPolar(gamepad1.left_stick_x,-gamepad1.left_stick_y);
+                    telemetry.addLine("BRRRRRRRRRR");
+                    telemetry.addData("drive r ",driveVector[0]);
+                    telemetry.addData("drive theta ",driveVector[1]);
+                    drive.drive(driveVector,gamepad1.right_stick_x);
             }
             telemetry.update();
         }
