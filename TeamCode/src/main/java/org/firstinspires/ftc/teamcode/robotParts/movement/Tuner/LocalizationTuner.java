@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotParts.movement.Localization;
+package org.firstinspires.ftc.teamcode.robotParts.movement.Tuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -9,11 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.localization;
+
 import java.util.List;
-//TODO: delete if tuner file works.
+
 @Config
 @TeleOp(name = "Localization Test", group = "Tests")
-public class LocalizationTest extends LinearOpMode {
+public class LocalizationTuner extends LinearOpMode {
     double[] position;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,11 +25,7 @@ public class LocalizationTest extends LinearOpMode {
         FrontR = hardwareMap.get(DcMotorEx.class, "right_front");
         BackL = hardwareMap.get(DcMotorEx.class, "left_back");
 
-        localization odom = new localization(FrontL,BackL,FrontR, true);
-
-        odom.leftOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odom.rightOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odom.backOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        localization odom = new localization(FrontL,BackL,FrontR,true);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 

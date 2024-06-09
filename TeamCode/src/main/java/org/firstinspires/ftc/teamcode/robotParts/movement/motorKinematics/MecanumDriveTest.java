@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotParts.movement.motorCommands;
+package org.firstinspires.ftc.teamcode.robotParts.movement.motorKinematics;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,8 +13,6 @@ import java.util.List;
 @Config
 @TeleOp(name = "Mecanum drive Test", group = "Tests")
 public class MecanumDriveTest extends LinearOpMode {
-    Vector2d one, two, three = new Vector2d();
-    public static double a, b, c, d = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         double[] driveVector;
@@ -34,14 +32,9 @@ public class MecanumDriveTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             driveVector = drive.toPolar(gamepad1.left_stick_x,-gamepad1.left_stick_y);
-            if (driveVector[1] > 1.5 * Math.PI) {
-                driveVector[1] -= 2 * Math.PI;
-            } else if (driveVector[1] <= -0.5 * Math.PI) {
-                driveVector[1] += 2 * Math.PI;
-            }
             telemetry.addData("drive r ",driveVector[0]);
             telemetry.addData("drive theta ",driveVector[1]);
-            drive.unoptimizedDrive(driveVector,gamepad1.right_stick_x);
+            drive.drive(driveVector,gamepad1.right_stick_x);
             telemetry.update();
         }
     }
