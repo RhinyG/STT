@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robotParts.movement.Bezier;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class PathBuilder {//d
+public class PathBuilder {//
     public PathFollower myOpMode;
     private double Bx = 0, By = 0, dBx = 0, dBy = 0, d2Bx = 0, d2By = 0;
     private double pow = 0, dpow = 0, d2pow = 0;
