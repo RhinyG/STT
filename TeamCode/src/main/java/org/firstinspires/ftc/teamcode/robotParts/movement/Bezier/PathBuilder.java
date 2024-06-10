@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.robotParts.movement.Bezier;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-public class PathBuilder {//
-    public PathFollower myOpMode;
-    private double Bx = 0, By = 0, dBx = 0, dBy = 0, d2Bx = 0, d2By = 0;
-    private double pow = 0, dpow = 0, d2pow = 0;
-    private double[] path_coordinate = {}, path_derivative = {}, path_sec_derivative = {};
-    public double[][] coordinate = {{}}, derivative = {{}}, sec_derivative = {{}};
+public class PathBuilder {
+    private double Bx, By, dBx, dBy, d2Bx, d2By;
+    double pow, dPow, d2Pow;
+    double[] path_coordinate, path_derivative, path_sec_derivative;
+    public double[][] controlPoints,coordinate, derivative, sec_derivative;
     public double[] r_circle = {};
+    int n, i;
 
-    public PathBuilder(PathFollower opmode) {myOpMode = opmode;}
+    public PathBuilder(double[][] points) {
+        controlPoints = points;
+        n = controlPoints.length;
+    }
 
-    public void buildPath(double[][] controlPoints) {
-        int n = controlPoints.length;
-        int i = 0;
+    public void buildPath() {
         for (double t = 0; t <= 1; t += 0.01) {
             i = (int)(t*100);
             coordinate[i] = get_path_coordinate(controlPoints, n, t);
@@ -38,9 +37,9 @@ public class PathBuilder {//
 
     private double[] get_derivative(double[][] controlPoints, int n, double t) {
         for (int i = 0; i <= n - 1; i++) {
-            dpow = nCr(n - 1, i) * Math.pow(1 - t, n - i - 1) * Math.pow(t, i);
-            dBx = dBx + dpow * (controlPoints[i + 1][0] - controlPoints[i][0]);
-            dBy = dBy + dpow * (controlPoints[i + 1][1] - controlPoints[i][1]);
+            dPow = nCr(n - 1, i) * Math.pow(1 - t, n - i - 1) * Math.pow(t, i);
+            dBx = dBx + dPow * (controlPoints[i + 1][0] - controlPoints[i][0]);
+            dBy = dBy + dPow * (controlPoints[i + 1][1] - controlPoints[i][1]);
         }
         dBx = n * dBx;
         dBy = n * dBy;
@@ -50,14 +49,20 @@ public class PathBuilder {//
     }
     private double[] get_sec_derivative(double[][] controlPoints, int n, double t) {
         for (int i = 0; i <= n-2; i++) {
-            d2pow = nCr(n-2,i) * Math.pow(1-t,n-i-2) * Math.pow(t,i);
-            d2Bx = d2Bx + d2pow * (controlPoints[i+2][0]-2*controlPoints[i+1][0] + controlPoints[i][0]);
-            d2By = d2By + d2pow * (controlPoints[i+2][1]-2*controlPoints[i+1][1] + controlPoints[i][1]);
+            d2Pow = nCr(n-2,i) * Math.pow(1-t,n-i-2) * Math.pow(t,i);
+            d2Bx = d2Bx + d2Pow * (controlPoints[i+2][0]-2*controlPoints[i+1][0] + controlPoints[i][0]);
+            d2By = d2By + d2Pow * (controlPoints[i+2][1]-2*controlPoints[i+1][1] + controlPoints[i][1]);
         }
         d2Bx = 2*n * d2Bx; d2By = 2*n * d2By;
         path_sec_derivative = new double[]{d2Bx,d2By};
         d2Bx = 0; d2By = 0;
         return path_sec_derivative;
+    }
+    public double[] lastPoint() {
+        return controlPoints[n-1];
+    }
+    public double[] firstPoint() {
+        return controlPoints[0];
     }
     static int nCr(int n, int r)
     {
