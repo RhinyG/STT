@@ -52,7 +52,7 @@ public class demoDrive extends LinearOpMode {
             switch (driveState) {
                 case 0:
                     outputFollower = p2p.followPID(path1.firstPoint());
-                    if (p2p.distanceToEndPoint() < 1) {driveState++;}
+                    if (p2p.distanceToEndPoint() < 1) {driveState++;} //TODO: And velocity smaller than certain value?
                     break;
                 case 1:
                     outputFollower = bezierFollower.followPath(path1, position, false);

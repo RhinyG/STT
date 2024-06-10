@@ -35,6 +35,7 @@ public class PathFollower {
                 }
             }
 
+
             d2 = (path.sec_derivative[closestT][1] * path.derivative[closestT][0] - path.sec_derivative[closestT][0] * derivative[1]) / Math.pow(path.sec_derivative[closestT][0], 2);
             relative_pos = (path.coordinate[closestT][0] - localization[0]) + (path.coordinate[closestT][1] - localization[1]);
 
@@ -50,12 +51,15 @@ public class PathFollower {
             corrPower = Fcorr * corrPower_weight;
 
             pathPower = 0;//TODO: something something sine(corrPower) something something idk
+            //Doesn't need to be calculated. Pathing power = motorspeed. You only need the angle (theta1 = asin(Fcorr/Fpath))
 
             theta1 = Math.asin(Fcorr/*/motor.speed*/);//TODO: this doesn't work yet right?
+            //It should if the weights are tuned.
             theta2 = Math.toRadians(localization[2]);
             theta4 = Math.atan(derivative[1] / derivative[0]);
 
             drivePower = 0; //TODO: something something sine(pathPower + corrPower) or something i have no clue
+            //Driving power is just the power you set the motors
             driveAngle = 0.5*Math.PI - theta1 - theta2 + theta4;
             if (headingLocked) rotatePower = rotate.calculate(localization[2],endHeading);
             else rotatePower = rotate.calculate(localization[2],driveAngle); //TODO: tune PID
