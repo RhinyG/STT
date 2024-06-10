@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.controller.PDController;
 
 public class PathFollower {
     double[] coordinate, derivative, sec_derivative;
-    double r_circle;
     double coordinateLength;
     double trans_dist, shortest_dist, relative_pos;
     int closestT;
@@ -35,9 +34,12 @@ public class PathFollower {
                 }
             }
 
+            coordinate = path.coordinate[closestT];
+            derivative = path.derivative[closestT];
+            sec_derivative = path.sec_derivative[closestT];
 
-            d2 = (path.sec_derivative[closestT][1] * path.derivative[closestT][0] - path.sec_derivative[closestT][0] * derivative[1]) / Math.pow(path.sec_derivative[closestT][0], 2);
-            relative_pos = (path.coordinate[closestT][0] - localization[0]) + (path.coordinate[closestT][1] - localization[1]);
+            d2 = (sec_derivative[1] * derivative[0] - sec_derivative[0] * derivative[1]) / Math.pow(sec_derivative[0], 2);
+            relative_pos = (coordinate[0] - localization[0]) + (coordinate[1] - localization[1]);
 
             Fcent = Fcent_weight * Math.pow(localization[3], 2) / path.r_circle[closestT];
             Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;//TODO: pid?

@@ -27,8 +27,8 @@ public class demoDrive extends LinearOpMode {
 
         double[] position,  // = {x, y, theta, velocity}
                 outputFollower = {0,0,0}; // = {driveVectorR, driveVectorTheta, rotatePower}
-        PathBuilder path1 = new PathBuilder(new double[][] {{0, 0}, {100, 0}, {100, 100}, {0, 100}});
-        PathBuilder path2 = new PathBuilder(new double[][]{path1.lastPoint(), {0, 50}, {-50, 50}});
+        PathBuilder path1 = new PathBuilder(new double[][] {{0, 0}, {100, 0}, {100, 100}, {0, 100}}).buildPath();
+        PathBuilder path2 = new PathBuilder(new double[][]{path1.lastPoint(), {0, 50}, {-50, 50}}).buildPath();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -39,8 +39,6 @@ public class demoDrive extends LinearOpMode {
         }
 
         drive.init(hardwareMap, false);
-        path1.buildPath();
-        path2.buildPath();
 
         int driveState = 0, armState = 0;
 

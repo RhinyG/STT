@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.robotParts.movement.Bezier;
 public class PathBuilder {
     private double Bx, By, dBx, dBy, d2Bx, d2By;
     double pow, dPow, d2Pow;
-    double[] path_coordinate, path_derivative, path_sec_derivative;
+    private double[] path_coordinate, path_derivative, path_sec_derivative;
     public double[][] controlPoints,coordinate, derivative, sec_derivative;
     public double[] r_circle = {};
     int n, i;
@@ -11,9 +11,10 @@ public class PathBuilder {
     public PathBuilder(double[][] points) {
         controlPoints = points;
         n = controlPoints.length;
+
     }
 
-    public void buildPath() {
+    public PathBuilder buildPath() {
         for (double t = 0; t <= 1; t += 0.01) {
             i = (int)(t*100);
             coordinate[i] = get_path_coordinate(controlPoints, n, t);
@@ -22,6 +23,7 @@ public class PathBuilder {
             r_circle[i] = (Math.pow(Math.pow(derivative[i][0],2) + Math.pow(derivative[i][1],2),1.5))/
                     (derivative[i][0]*sec_derivative[i][1]-derivative[i][1] *sec_derivative[i][0]);
         }
+        return this;
     }
 
     private double[] get_path_coordinate(double[][] controlPoints, int n, double t) {
