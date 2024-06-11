@@ -33,7 +33,7 @@ public class PathFollower {
         double predictedStoppingScalar = robot_velocity_magnitude/decelerationConstant;
         double[] predictedStoppingVector = new double[]{robot_velocity[0] * predictedStoppingScalar, robot_velocity[1] * predictedStoppingScalar};
         double predictedStoppingVectorMagnitude = Math.hypot(predictedStoppingVector[0], predictedStoppingVector[1]);
-        if (predictedStoppingVectorMagnitude >= targetDistance) {
+        if (predictedStoppingVectorMagnitude < targetDistance) {
             //Calculates the point on the path closest to the robot, using the cached table.
             for (int i = closestT; i < coordinateLength; i++) {
                 coordinate = path.coordinate[i];
