@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.localization;
+import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.Localization;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ArcLocalizationTuner extends LinearOpMode {
         FrontR = hardwareMap.get(DcMotorEx.class, "right_front");
         BackL = hardwareMap.get(DcMotorEx.class, "left_back");
 
-        localization odom = new localization(FrontL,BackL,FrontR,true);
+        Localization odom = new Localization(FrontL,BackL,FrontR,true);
         //TODO: we also do this within each added class (like odom), is that necessary?
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 

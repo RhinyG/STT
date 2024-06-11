@@ -23,7 +23,7 @@ public class LocalizationTest extends LinearOpMode {
         FrontR = hardwareMap.get(DcMotorEx.class, "right_front");
         BackL = hardwareMap.get(DcMotorEx.class, "left_back");
 
-        localization odom = new localization(FrontL,BackL,FrontR, true);
+        Localization odom = new Localization(FrontL,BackL,FrontR, true);
 
         odom.leftOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         odom.rightOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

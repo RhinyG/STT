@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.robotParts.movement.Localization;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-public class localization {
+public class Localization {
     public DcMotorEx leftOdo,rightOdo,backOdo;
-    public localization(DcMotorEx left,DcMotorEx right,DcMotorEx back, boolean reset) {
+    public Localization(DcMotorEx left, DcMotorEx right, DcMotorEx back, boolean reset) {
         leftOdo = left;
         rightOdo = right;
         backOdo = back;
@@ -100,7 +100,7 @@ public class localization {
         currentTheta = oldTheta + dTheta;
         currentX = oldX + relDX * Math.cos(currentTheta) - relDY * Math.sin(currentTheta);
         currentY = oldY + relDY * Math.cos(currentTheta) - relDX * Math.sin(currentTheta);
-        return new double[] {currentX, currentY, currentTheta, 10*Math.sqrt(Math.pow(relDX,2)+Math.pow(relDY,2))/(currentTime-oldTime)};
+        return new double[] {currentX, currentY, currentTheta, 10*relDX/(currentTime-oldTime), 10*relDY/(currentTime-oldTime)};
     }
 
     /**

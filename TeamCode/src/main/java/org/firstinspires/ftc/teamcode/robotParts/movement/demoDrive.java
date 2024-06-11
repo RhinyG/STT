@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robotParts.movement.motorKinematics.Mecanu
 import org.firstinspires.ftc.teamcode.robotParts.movement.Bezier.PathBuilder;
 import org.firstinspires.ftc.teamcode.robotParts.movement.Bezier.PathFollower;
 import org.firstinspires.ftc.teamcode.robotParts.movement.PID2Point.pidFollower;
-import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.localization;
+import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.Localization;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class demoDrive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         MecanumDrivetrain drive = new MecanumDrivetrain(this);
-        localization odom = new localization(drive.FrontL, drive.BackL, drive.FrontR, true);
+        Localization odom = new Localization(drive.FrontL, drive.BackL, drive.FrontR, true);
         PathFollower bezierFollower = new PathFollower();
         pidFollower p2p = new pidFollower(this);
 
