@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robotParts.movement.Bezier;
 
 import com.arcrobotics.ftclib.controller.PDController;
 
-import java.nio.file.Path;
+import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.Localization;
 
 public class PathFollower {
     final double decelerationConstant = 0.0007;
@@ -14,26 +14,48 @@ public class PathFollower {
     double d2;
     double Fcent, Ftrans, Fcorr;
     double Fcent_weight, Ftrans_weight, rotateP, rotateD;
-    double corrPower, pathPower, drivePower, driveAngle, rotatePower;
+    double corrPower, drivePower, driveAngle, rotatePower;
     double theta1, theta2, theta4;
     double[] robot_velocity = new double[2];
     double robot_velocity_magnitude;
+    double predictedStoppingScalar, predictedStoppingVectorMagnitude;
+    double[] predictedStoppingVector;
     PDController rotate = new PDController(rotateP, rotateD);
+
+    /**
+     * TODO: documentation
+     * @param path
+     * @param localization
+     * @param endSpline
+     * @return
+     */
     public double[] followPath(PathBuilder path, double[] localization, boolean endSpline) {
         return followPath(path, localization,endSpline, false, 0);
     }
+
+    /**
+     * TODO: documentation
+     * @param path
+     * @param localization
+     * @param endSpline
+     * @param headingLocked
+     * @param endHeading
+     * @return
+     */
     public double[] followPath(PathBuilder path, double[] localization, boolean endSpline, boolean headingLocked, double endHeading) {
         coordinateLength = path.coordinate.length;
         robot_velocity[0] = localization[3];
         robot_velocity[1] = localization[4];
         robot_velocity_magnitude = Math.hypot(robot_velocity[0],robot_velocity[1]);
 
-        double targetDistance = Math.hypot(path.lastPoint()[0]-localization[0], path.lastPoint()[1]-localization[1]);
+        predictedStoppingScalar = robot_velocity_magnitude/decelerationConstant;
+        predictedStoppingVector = new double[]{robot_velocity[0] * predictedStoppingScalar, robot_velocity[1] * predictedStoppingScalar};
+        predictedStoppingVectorMagnitude = Math.hypot(predictedStoppingVector[0], predictedStoppingVector[1]);
 
-        double predictedStoppingScalar = robot_velocity_magnitude/decelerationConstant;
-        double[] predictedStoppingVector = new double[]{robot_velocity[0] * predictedStoppingScalar, robot_velocity[1] * predictedStoppingScalar};
-        double predictedStoppingVectorMagnitude = Math.hypot(predictedStoppingVector[0], predictedStoppingVector[1]);
-        if (predictedStoppingVectorMagnitude < targetDistance) {
+        if (predictedStoppingVectorMagnitude > distanceToEndPoint(path, localization) && endSpline) {
+            //TODO: do the coasting/velocity based stopping thingy
+            drivePower = 0;
+        } else {
             //Calculates the point on the path closest to the robot, using the cached table.
             for (int i = closestT; i < coordinateLength; i++) {
                 coordinate = path.coordinate[i];
@@ -57,7 +79,7 @@ public class PathFollower {
             relative_pos = (coordinate[0] - localization[0]) + (coordinate[1] - localization[1]);
 
             Fcent = Fcent_weight * Math.pow(robot_velocity_magnitude, 2) / path.r_circle[closestT];
-            Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;//TODO: pid?
+            Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;//TODO: pid
 
             if (d2 < 0) Fcent *= -1;
             if ((d2 < 0 && relative_pos < 0) || (d2 > 0 && relative_pos > 0)) Ftrans *= -1;
@@ -69,20 +91,17 @@ public class PathFollower {
 
             drivePower = max_speed;
 
-            theta1 = Math.asin(Fcorr/*/motor.speed*/);
-            //It should if the weights are tuned.
+            theta1 = Math.asin(Fcorr/max_speed);
             theta2 = Math.toRadians(localization[2]);
             theta4 = Math.atan(derivative[1] / derivative[0]);
 
             driveAngle = 0.5*Math.PI - theta1 - theta2 + theta4;
             if (headingLocked) rotatePower = rotate.calculate(localization[2],endHeading);
             else rotatePower = rotate.calculate(localization[2],driveAngle); //TODO: tune PID
-        } else {
-            //TODO: do the coasting thingy
         }
         return new double[] {drivePower,driveAngle,rotatePower};
     }
-    public double distanceToEndPoint() {
-        return Math.sqrt(shortest_dist);
+    public double distanceToEndPoint(PathBuilder path, double[] localization) {
+        return Math.hypot(path.lastPoint()[0]-localization[0], path.lastPoint()[1]-localization[1]);
     }
 }

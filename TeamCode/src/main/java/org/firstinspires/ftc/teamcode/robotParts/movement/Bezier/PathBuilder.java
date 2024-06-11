@@ -21,7 +21,7 @@ public class PathBuilder {
             derivative[i] = get_derivative(controlPoints, n, t);
             sec_derivative[i] = get_sec_derivative(controlPoints, n, t);
             r_circle[i] = (Math.pow(Math.pow(derivative[i][0],2) + Math.pow(derivative[i][1],2),1.5))/
-                    (derivative[i][0]*sec_derivative[i][1]-derivative[i][1] *sec_derivative[i][0]);
+                    (derivative[i][0]*sec_derivative[i][1]-derivative[i][1]*sec_derivative[i][0]);
         }
         return this;
     }
@@ -29,8 +29,8 @@ public class PathBuilder {
     private double[] get_path_coordinate(double[][] controlPoints, int n, double t) {
         for (int i = 0; i <= n; i++) {
             pow = nCr(n, i) * Math.pow(1 - t, n - i) * Math.pow(t, i);
-            Bx = Bx + pow * controlPoints[i][0];
-            By = By + pow * controlPoints[i][1];
+            Bx += pow * controlPoints[i][0];
+            By += pow * controlPoints[i][1];
         }
         path_coordinate = new double[]{Bx, By};
         Bx = 0; By = 0;
@@ -40,8 +40,8 @@ public class PathBuilder {
     private double[] get_derivative(double[][] controlPoints, int n, double t) {
         for (int i = 0; i <= n - 1; i++) {
             dPow = nCr(n - 1, i) * Math.pow(1 - t, n - i - 1) * Math.pow(t, i);
-            dBx = dBx + dPow * (controlPoints[i + 1][0] - controlPoints[i][0]);
-            dBy = dBy + dPow * (controlPoints[i + 1][1] - controlPoints[i][1]);
+            dBx += dPow * (controlPoints[i + 1][0] - controlPoints[i][0]);
+            dBy += dPow * (controlPoints[i + 1][1] - controlPoints[i][1]);
         }
         dBx = n * dBx;
         dBy = n * dBy;
@@ -52,8 +52,8 @@ public class PathBuilder {
     private double[] get_sec_derivative(double[][] controlPoints, int n, double t) {
         for (int i = 0; i <= n-2; i++) {
             d2Pow = nCr(n-2,i) * Math.pow(1-t,n-i-2) * Math.pow(t,i);
-            d2Bx = d2Bx + d2Pow * (controlPoints[i+2][0]-2*controlPoints[i+1][0] + controlPoints[i][0]);
-            d2By = d2By + d2Pow * (controlPoints[i+2][1]-2*controlPoints[i+1][1] + controlPoints[i][1]);
+            d2Bx += d2Pow * (controlPoints[i+2][0]-2*controlPoints[i+1][0] + controlPoints[i][0]);
+            d2By += d2Pow * (controlPoints[i+2][1]-2*controlPoints[i+1][1] + controlPoints[i][1]);
         }
         d2Bx = 2*n * d2Bx; d2By = 2*n * d2By;
         path_sec_derivative = new double[]{d2Bx,d2By};

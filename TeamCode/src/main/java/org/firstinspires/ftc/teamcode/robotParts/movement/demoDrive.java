@@ -40,7 +40,7 @@ public class demoDrive extends LinearOpMode {
 
         drive.init(hardwareMap, false);
 
-        int driveState = 0, armState = 0;
+        int driveState = 0;
 
         waitForStart();
         if (isStopRequested()) return;
@@ -50,19 +50,19 @@ public class demoDrive extends LinearOpMode {
             switch (driveState) {
                 case 0:
                     outputFollower = p2p.followPID(path1.firstPoint());
-                    if (p2p.distanceToEndPoint() < 1) {driveState++;} //TODO: And velocity smaller than certain value?
+                    if (p2p.distanceToEndPoint() < 1) driveState++; //TODO: And velocity smaller than certain value?
                     break;
                 case 1:
                     outputFollower = bezierFollower.followPath(path1, position, false);
-                    if (bezierFollower.distanceToEndPoint() < 1) {driveState++;}
+                    if (bezierFollower.distanceToEndPoint(path1,position) < 1) driveState++;
                     break;
                 case 2:
                     outputFollower = bezierFollower.followPath(path2, position, true, true, Math.toRadians(90));
-//                    if (arm.isKlaar){driveState++;}
+//                    if (arm.isDone){driveState++;}
                     break;
                 case 3:
                     outputFollower = p2p.followPID(-100, 50, 90);
-                    if (p2p.distanceToEndPoint() < 1) {driveState++;}
+                    if (p2p.distanceToEndPoint() < 1) driveState++;
                     break;
                 case 4:
                     //Do other shit, etc.
