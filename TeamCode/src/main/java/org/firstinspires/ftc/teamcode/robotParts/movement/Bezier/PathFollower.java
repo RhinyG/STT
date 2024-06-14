@@ -55,8 +55,8 @@ public class PathFollower extends RobotPart {
      * @return
      */
     public double[] followPath(PathBuilder path, double[] localization, boolean endSpline, boolean headingLocked, double endHeading, int startCheckCoasting) {
+        coordinateLength = path.coordinate.length;
         if (closestT > startCheckCoasting) {
-            coordinateLength = path.coordinate.length;
             robot_velocity[0] = localization[3];
             robot_velocity[1] = localization[4];
             robot_velocity_magnitude = Math.hypot(robot_velocity[0],robot_velocity[1]);
