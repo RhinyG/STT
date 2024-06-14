@@ -24,7 +24,6 @@ public class PathFollower extends RobotPart {
     double robot_velocity_magnitude;
     double predictedStoppingScalar, predictedStoppingVectorMagnitude;
     double[] predictedStoppingVector, predictedStopPosition;
-    double[] returnVariables;
     PDController rotate = new PDController(rotateP, rotateD);
     LinearOpMode myOpMode;
 
@@ -69,7 +68,7 @@ public class PathFollower extends RobotPart {
 
         if (predictedStoppingVectorMagnitude > distanceToEndPoint(localization, path.lastPoint()) && endSpline) {
             predictedStopPosition = new double[]{predictedStoppingVector[0] + localization[0], predictedStoppingVector[1] + localization[1]};
-            returnVariables = p2p.followPID(predictedStopPosition,path.lastPoint(),endHeading);
+            return p2p.followPID(predictedStopPosition,path.lastPoint(),endHeading);
         } else {
             //Calculates the point on the path closest to the robot, using the cached table.
             for (int i = closestT; i < coordinateLength; i++) {
@@ -113,8 +112,8 @@ public class PathFollower extends RobotPart {
             driveAngle = 0.5*Math.PI - theta1 - theta2 + theta4;
             if (headingLocked) rotatePower = rotate.calculate(localization[2],endHeading);
             else rotatePower = rotate.calculate(localization[2],driveAngle); //TODO: tune PID
+            return new double[] {drivePower,driveAngle,rotatePower};
         }
-        return new double[] {drivePower,driveAngle,rotatePower};
     }
     public void runOpMode() {}
 }
