@@ -22,13 +22,14 @@ public class demoDrive extends LinearOpMode {
 
         MecanumDrivetrain drive = new MecanumDrivetrain(this);
         Localization odom = new Localization(drive.FrontL, drive.BackL, drive.FrontR, true);
-        PathFollower bezierFollower = new PathFollower();
+        PathFollower bezierFollower = new PathFollower(this);
         pidFollower p2p = new pidFollower(this);
 
         double[] position,  // = {x, y, theta, velocity}
                 outputFollower = {0,0,0}; // = {driveVectorR, driveVectorTheta, rotatePower}
         PathBuilder path1 = new PathBuilder(new double[][] {{0, 0}, {100, 0}, {100, 100}, {0, 100}}).buildPath();
         PathBuilder path2 = new PathBuilder(new double[][]{path1.lastPoint(), {0, 50}, {-50, 50}}).buildPath();
+        PathBuilder path3 = new PathBuilder(path2.reversePoints());
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -49,23 +50,24 @@ public class demoDrive extends LinearOpMode {
             position = odom.arcVelocity();
             switch (driveState) {
                 case 0:
-                    outputFollower = p2p.followPID(path1.firstPoint());
-                    if (p2p.distanceToEndPoint() < 1) driveState++; //TODO: And velocity smaller than certain value?
+                    outputFollower = p2p.followPID(position, path1.firstPoint(),0);
+                    if (p2p.distanceToEndPoint(position, path1.firstPoint()) < 1) driveState++; //TODO: And velocity smaller than certain value?
                     break;
                 case 1:
                     outputFollower = bezierFollower.followPath(path1, position, false);
-                    if (bezierFollower.distanceToEndPoint(path1,position) < 1) driveState++;
+                    if (bezierFollower.distanceToEndPoint(position, path1.lastPoint()) < 1) driveState++;
                     break;
                 case 2:
-                    outputFollower = bezierFollower.followPath(path2, position, true, true, Math.toRadians(90));
+                    outputFollower = bezierFollower.followPath(path2, position, true, true, Math.toRadians(90),90);
 //                    if (arm.isDone){driveState++;}
                     break;
                 case 3:
-                    outputFollower = p2p.followPID(-100, 50, 90);
-                    if (p2p.distanceToEndPoint() < 1) driveState++;
+                    outputFollower = p2p.followPID(position,new double[]{-100, 50}, 90);
+                    if (p2p.distanceToEndPoint(position, new double[]{-100, 50}) < 1) driveState++;
                     break;
                 case 4:
-                    //Do other shit, etc.
+                    outputFollower = bezierFollower.followPath(path3, position, true);
+                    if (bezierFollower.distanceToEndPoint(position, path3.lastPoint()) < 1) driveState++;
             }
             drive.drive(new double[] {outputFollower[0],outputFollower[1]}, outputFollower[2]);
             telemetry.update();

@@ -6,10 +6,11 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robotParts.RobotPart;
 
-public class pidFollower {
+public class pidFollower extends RobotPart {
     Telemetry telemetry;
-    double targetHeading,drivePower,driveAngle,rotatePower;
+    double drivePower,driveAngle,rotatePower;
     public static double driveP = 0.0025, driveI = 0.001, driveD = 0.00004, rotateP = 0.0025, rotateI = 0.001, rotateD = 0.00004;
     PIDController drive = new PIDController(driveP, driveI, driveD), rotate = new PIDController(rotateP,rotateI,rotateD);
     double[] position;
@@ -23,20 +24,14 @@ public class pidFollower {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
     //TODO: documentation
-    public double[] followPID(double x, double y, double heading) {
-        return followPID(new double[]{x, y, heading});
-    }
-    //TODO: documentation
-    public double[] followPID(double[] position) {
-        position[2] = targetHeading;
-
+    public double[] followPID(double[] startPosition, double[] endPosition, double targetHeading) {
         drive.setPID(driveP,driveI,driveD);//TODO: you might be able to delete this step, according to https://docs.ftclib.org/ftclib/features/controllers
         rotate.setPID(rotateP,rotateI,rotateD);
 
-        drivePower = drive.calculate(distanceToEndPoint(), 0);
-        rotatePower = rotate.calculate(position[2],targetHeading);
+        drivePower = drive.calculate(distanceToEndPoint(startPosition, endPosition), 0);
+        rotatePower = rotate.calculate(endPosition[2],targetHeading);
 
-        driveAngle = Math.atan2(position[1],position[0]);
+        driveAngle = Math.atan2(endPosition[1],endPosition[0]);
 
         telemetry();
         return new double[] {drivePower, driveAngle, rotatePower};
@@ -45,8 +40,6 @@ public class pidFollower {
     public void telemetry(){
         telemetry.addData("CurrentHeading", position[2]);
     }
-    //TODO: documentation
-    public double distanceToEndPoint(){
-        return Math.sqrt(Math.pow(position[0],2) + Math.pow(position[1],2));
-    }
+
+    public void runOpMode() {}
 }

@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.robotParts.movement.Bezier;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PDController;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robotParts.movement.Localization.Localization;
+import org.firstinspires.ftc.teamcode.robotParts.RobotPart;
+import org.firstinspires.ftc.teamcode.robotParts.movement.PID2Point.pidFollower;
 
-public class PathFollower {
+public class PathFollower extends RobotPart {
     final double decelerationConstant = 0.0007;
     final double max_speed = 1;
     double[] coordinate, derivative, sec_derivative;
@@ -19,9 +23,17 @@ public class PathFollower {
     double[] robot_velocity = new double[2];
     double robot_velocity_magnitude;
     double predictedStoppingScalar, predictedStoppingVectorMagnitude;
-    double[] predictedStoppingVector;
+    double[] predictedStoppingVector, predictedStopPosition;
+    double[] returnVariables;
     PDController rotate = new PDController(rotateP, rotateD);
+    LinearOpMode myOpMode;
 
+    public PathFollower(LinearOpMode opmode) {
+        myOpMode = opmode;
+        telemetry = opmode.telemetry;
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    }
+    pidFollower p2p = new pidFollower(myOpMode);
     /**
      * TODO: documentation
      * @param path
@@ -30,31 +42,34 @@ public class PathFollower {
      * @return
      */
     public double[] followPath(PathBuilder path, double[] localization, boolean endSpline) {
-        return followPath(path, localization,endSpline, false, 0);
+        return followPath(path, localization,endSpline, false, 0, 90);
     }
 
     /**
-     * TODO: documentation
+     * TODO: documentation, EN
      * @param path
      * @param localization
      * @param endSpline
      * @param headingLocked
      * @param endHeading
+     * @param startCheckCoasting
      * @return
      */
-    public double[] followPath(PathBuilder path, double[] localization, boolean endSpline, boolean headingLocked, double endHeading) {
-        coordinateLength = path.coordinate.length;
-        robot_velocity[0] = localization[3];
-        robot_velocity[1] = localization[4];
-        robot_velocity_magnitude = Math.hypot(robot_velocity[0],robot_velocity[1]);
+    public double[] followPath(PathBuilder path, double[] localization, boolean endSpline, boolean headingLocked, double endHeading, int startCheckCoasting) {
+        if (closestT > startCheckCoasting) {
+            coordinateLength = path.coordinate.length;
+            robot_velocity[0] = localization[3];
+            robot_velocity[1] = localization[4];
+            robot_velocity_magnitude = Math.hypot(robot_velocity[0],robot_velocity[1]);
 
-        predictedStoppingScalar = robot_velocity_magnitude/decelerationConstant;
-        predictedStoppingVector = new double[]{robot_velocity[0] * predictedStoppingScalar, robot_velocity[1] * predictedStoppingScalar};
-        predictedStoppingVectorMagnitude = Math.hypot(predictedStoppingVector[0], predictedStoppingVector[1]);
+            predictedStoppingScalar = robot_velocity_magnitude/decelerationConstant;
+            predictedStoppingVector = new double[]{robot_velocity[0] * predictedStoppingScalar, robot_velocity[1] * predictedStoppingScalar};
+            predictedStoppingVectorMagnitude = Math.hypot(predictedStoppingVector[0], predictedStoppingVector[1]);
+        } else predictedStoppingVectorMagnitude = 0;
 
-        if (predictedStoppingVectorMagnitude > distanceToEndPoint(path, localization) && endSpline) {
-            //TODO: do the coasting/velocity based stopping thingy
-            drivePower = 0;
+        if (predictedStoppingVectorMagnitude > distanceToEndPoint(localization, path.lastPoint()) && endSpline) {
+            predictedStopPosition = new double[]{predictedStoppingVector[0] + localization[0], predictedStoppingVector[1] + localization[1]};
+            returnVariables = p2p.followPID(predictedStopPosition,path.lastPoint(),endHeading);
         } else {
             //Calculates the point on the path closest to the robot, using the cached table.
             for (int i = closestT; i < coordinateLength; i++) {
@@ -101,7 +116,5 @@ public class PathFollower {
         }
         return new double[] {drivePower,driveAngle,rotatePower};
     }
-    public double distanceToEndPoint(PathBuilder path, double[] localization) {
-        return Math.hypot(path.lastPoint()[0]-localization[0], path.lastPoint()[1]-localization[1]);
-    }
+    public void runOpMode() {}
 }

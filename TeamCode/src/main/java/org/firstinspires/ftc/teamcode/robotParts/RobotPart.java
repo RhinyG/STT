@@ -37,7 +37,11 @@ public abstract class RobotPart extends LinearOpMode {
             servo.setPower(power);
         }
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param map
+     */
     public void initIMU(HardwareMap map){
         imu = map.get(IMU.class, "imu");
 
@@ -49,11 +53,24 @@ public abstract class RobotPart extends LinearOpMode {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+      * @param cartesian
+     * @return
+     */
+    @Deprecated
     public double[] oldToPolar(double[] cartesian) {
         return oldToPolar(cartesian[0],cartesian[1]);
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param x
+     * @param y
+     * @return
+     */
+    @Deprecated
     public double[] oldToPolar(double x, double y) {
         double r = Math.sqrt(x * x + y * y);
         double theta;
@@ -66,19 +83,43 @@ public abstract class RobotPart extends LinearOpMode {
         }
         return new double[]{r,theta};
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param cartesian
+     * @param normalise
+     * @return
+     */
     public double[] toPolar(double[] cartesian, boolean normalise) {
         return toPolar(cartesian[0],cartesian[1],normalise);
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param cartesian
+     * @return
+     */
     public double[] toPolar(double[] cartesian) {
         return toPolar(cartesian[0],cartesian[1],false);
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param x
+     * @param y
+     * @return
+     */
     public double[] toPolar(double x, double y) {
         return toPolar(x, y, false);
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param x
+     * @param y
+     * @param normalise
+     * @return
+     */
     public double[] toPolar(double x, double y, boolean normalise) {
         double r = Math.sqrt(x * x + y * y);
         double theta = Math.atan2(y,x);
@@ -91,11 +132,22 @@ public abstract class RobotPart extends LinearOpMode {
         }
         return new double[]{r,theta};
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param polar
+     * @return
+     */
     public double[] toCartesian(double[] polar) {
         return toCartesian(polar[0],polar[1]);
     }
-    //TODO: documentation, EN
+
+    /**
+     * TODO: documentation, EN
+     * @param r
+     * @param theta
+     * @return
+     */
     public double[] toCartesian(double r, double theta) {
         double x = r * Math.cos(theta);
         double y = r * Math.sin(theta);
@@ -110,5 +162,15 @@ public abstract class RobotPart extends LinearOpMode {
     //TODO: what on earth does this do
     public void telem(DcMotorEx motor) {
         telemetry.addData("" + motor, motor);
+    }
+
+    /**
+     * TODO: documentation, EN
+     * @param beginPoint
+     * @param endPoint
+     * @return
+     */
+    public double distanceToEndPoint(double[] beginPoint, double[] endPoint) {
+        return Math.hypot(endPoint[0]-beginPoint[0], endPoint[1]-beginPoint[1]);
     }
 }

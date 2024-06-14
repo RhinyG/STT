@@ -50,7 +50,8 @@ public class DifferentialDrivetrain extends RobotPart {
 
         initIMU(hardwareMap);
     }
-    //TODO: in EN (with documentation), then delete
+    //TODO: in EN (with documentation)
+    @Deprecated
     public void simple(){
         double FWDB = myOpMode.gamepad1.left_stick_y;
         double ROTB = -0.55 * myOpMode.gamepad1.left_stick_x;
@@ -62,6 +63,7 @@ public class DifferentialDrivetrain extends RobotPart {
         DTMotors[3].setPower(FWDR - ROTR);
     }
     //TODO: documentation
+    @Deprecated
     public void lessSimple() {
         x = myOpMode.gamepad1.left_stick_x;
         y = -myOpMode.gamepad1.left_stick_y;

@@ -4,7 +4,7 @@ public class PathBuilder {
     private double Bx, By, dBx, dBy, d2Bx, d2By;
     double pow, dPow, d2Pow;
     private double[] path_coordinate, path_derivative, path_sec_derivative;
-    public double[][] controlPoints,coordinate, derivative, sec_derivative;
+    public double[][] controlPoints,coordinate, derivative, sec_derivative, reversedControlPoints;
     public double[] r_circle = {};
     int n, i;
 
@@ -65,6 +65,12 @@ public class PathBuilder {
     }
     public double[] firstPoint() {
         return controlPoints[0];
+    }
+    public double[][] reversePoints() {
+        for (int i = 0; i < n; i++) {
+            reversedControlPoints[i] = controlPoints[n-i-1];
+        }
+        return reversedControlPoints;
     }
     static int nCr(int n, int r)
     {

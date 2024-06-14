@@ -107,6 +107,7 @@ public class Localization {
      * <a href="https://www.youtube.com/watch?v=ixsxDn_ddLE&t=3s">The Clueless linear odometry</a> tracking equations.
      * For tuning and documentation, see {@link #arcVelocity()}
      */
+    @Deprecated
     public double[] linearVelocity() {
         oldTheta = currentTheta;
         oldX = currentX;
