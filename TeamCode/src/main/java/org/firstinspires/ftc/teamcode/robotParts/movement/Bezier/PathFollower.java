@@ -94,7 +94,7 @@ public class PathFollower extends RobotPart {
 
             Fcent = Fcent_weight * Math.pow(robot_velocity_magnitude, 2) / path.r_circle[closestT];
             Ftrans =  p2p.followPID(localization,coordinate,(derivative[1]/derivative[0]))[0]; //return the translationalpower between currentPos and closestPathPoint
-            //Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;//TODO: pid
+            //Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;
 
             if (d2 < 0) Fcent *= -1;
             if ((d2 < 0 && relative_pos < 0) || (d2 > 0 && relative_pos > 0)) Ftrans *= -1;
@@ -113,6 +113,7 @@ public class PathFollower extends RobotPart {
             driveAngle = 0.5*Math.PI - theta1 - theta2 + theta4;
             if (headingLocked) rotatePower = rotate.calculate(localization[2],endHeading);
             else rotatePower = rotate.calculate(localization[2],driveAngle); //TODO: tune PID
+                                                                            //Heb je nu toch al? Of wil je t met de class doen
             return new double[] {drivePower,driveAngle,rotatePower};
         }
     }
