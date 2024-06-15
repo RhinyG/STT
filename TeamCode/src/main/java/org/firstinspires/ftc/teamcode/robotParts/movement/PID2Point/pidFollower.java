@@ -29,7 +29,7 @@ public class pidFollower extends RobotPart {
         rotate.setPID(rotateP,rotateI,rotateD);
 
         drivePower = drive.calculate(distanceToEndPoint(startPosition, endPosition), 0);
-        rotatePower = rotate.calculate(endPosition[2],targetHeading);
+        rotatePower = rotate.calculate(startPosition[2],targetHeading); //startPosition[2] was eerst endPosition[2]
 
         driveAngle = Math.atan2(endPosition[1],endPosition[0]);
 

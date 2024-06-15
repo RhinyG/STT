@@ -67,8 +67,8 @@ public class PathFollower extends RobotPart {
         } else predictedStoppingVectorMagnitude = 0;
 
         if (predictedStoppingVectorMagnitude > distanceToEndPoint(localization, path.lastPoint()) && endSpline) {
-            predictedStopPosition = new double[]{predictedStoppingVector[0] + localization[0], predictedStoppingVector[1] + localization[1]};
-            return p2p.followPID(predictedStopPosition,path.lastPoint(),endHeading);
+            predictedStopPosition = new double[]{predictedStoppingVector[0] + localization[0], predictedStoppingVector[1] + localization[1], localization[2]};
+            return p2p.followPID(predictedStopPosition, path.lastPoint(),endHeading);
         } else {
             //Calculates the point on the path closest to the robot, using the cached table.
             for (int i = closestT; i < coordinateLength; i++) {
@@ -93,7 +93,8 @@ public class PathFollower extends RobotPart {
             relative_pos = (coordinate[0] - localization[0]) + (coordinate[1] - localization[1]);
 
             Fcent = Fcent_weight * Math.pow(robot_velocity_magnitude, 2) / path.r_circle[closestT];
-            Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;//TODO: pid
+            Ftrans =  p2p.followPID(localization,coordinate,(derivative[1]/derivative[0]))[0]; //return the translationalpower between currentPos and closestPathPoint
+            //Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;//TODO: pid
 
             if (d2 < 0) Fcent *= -1;
             if ((d2 < 0 && relative_pos < 0) || (d2 > 0 && relative_pos > 0)) Ftrans *= -1;
