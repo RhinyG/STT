@@ -25,7 +25,9 @@ public class ArcLocalizationTuner extends LinearOpMode {
         FrontR = hardwareMap.get(DcMotorEx.class, "right_front");
         BackL = hardwareMap.get(DcMotorEx.class, "left_back");
 
+        //TODO: make the variables you're tuning final, that should speed up tuning.
         Localization odom = new Localization(FrontL,BackL,FrontR,true);
+
         //TODO: we also do this within each added class (like odom), is that necessary?
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -71,6 +73,7 @@ public class ArcLocalizationTuner extends LinearOpMode {
                 case 0:
                     telemetry.addLine("Before you start, get a caliper and add values for Lx, Ly, Rx, Ry, Bx, By. Also add values for your gear ratio, ticks per rotation and (odometry) wheel radius.");
                     telemetry.addLine("These values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.");
+                    telemetry.addLine("Replace the keyword 'final' from Localization.java:19 and Localization.java:23 with 'public static'");
                     telemetry.addLine("You will then start step one. You have to turn the left and right wheels forward, and the back wheel to the left.");
                     telemetry.addLine("All encoder positions should increase.");
                     values = odom.arcVelocity();
@@ -101,6 +104,7 @@ public class ArcLocalizationTuner extends LinearOpMode {
                     telemetry.addLine("If your Y value does not return to zero, Bx needs to be changed. If Y is too high, increase/decrease Bx.");
                     telemetry.addData("Y coordinate",odom.arcVelocity()[1]);
                     telemetry.addLine("You should be done tuning.");
+                    telemetry.addLine("Change the variables you've just tuned back to final.");
             }
             telemetry.update();
         }

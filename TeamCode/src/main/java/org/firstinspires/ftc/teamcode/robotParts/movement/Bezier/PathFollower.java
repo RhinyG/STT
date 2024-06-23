@@ -9,54 +9,43 @@ import org.firstinspires.ftc.teamcode.robotParts.RobotPart;
 import org.firstinspires.ftc.teamcode.robotParts.movement.PID2Point.pidFollower;
 
 public class PathFollower extends RobotPart {
-    final double decelerationConstant = 0.0007;
-    final double max_speed = 1;
+    //TODO: make final after tuning
+    public static double Fcent_weight, rotateP, rotateD, translationalP, translationD, decelerationConstant = 0.0007;
     double[] coordinate, derivative, sec_derivative;
     double coordinateLength;
     double trans_dist, shortest_dist, relative_pos;
     int closestT;
     double d2;
     double Fcent, Ftrans, Fcorr;
-    double Fcent_weight, Ftrans_weight, rotateP, rotateD;
-    double corrPower, drivePower, driveAngle, rotatePower;
+    double corrPower, driveAngle, rotatePower;
     double theta1, theta2, theta4;
     double[] robot_velocity = new double[2];
     double robot_velocity_magnitude;
     double predictedStoppingScalar, predictedStoppingVectorMagnitude;
     double[] predictedStoppingVector, predictedStopPosition;
-    PDController rotate = new PDController(rotateP, rotateD);
+    PDController translational = new PDController(translationalP,translationD),rotate = new PDController(rotateP, rotateD);
     LinearOpMode myOpMode;
-
     public PathFollower(LinearOpMode opmode) {
         myOpMode = opmode;
         telemetry = opmode.telemetry;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
     pidFollower p2p = new pidFollower(myOpMode);
-    /**
-     * TODO: documentation
-     * @param path
-     * @param localization
-     * @param endSpline
-     * @return
-     */
-    public double[] followPath(PathBuilder path, double[] localization, boolean endSpline) {
-        return followPath(path, localization,endSpline, false, 0, 90);
-    }
 
     /**
      * TODO: documentation, EN
      * @param path
      * @param localization
+     * @param maxSpeed
      * @param endSpline
      * @param headingLocked
      * @param endHeading
      * @param startCheckCoasting
      * @return
      */
-    public double[] followPath(PathBuilder path, double[] localization, boolean endSpline, boolean headingLocked, double endHeading, int startCheckCoasting) {
+    public double[] followPath(PathBuilder path, double[] localization, double maxSpeed, boolean endSpline, boolean headingLocked, double endHeading, int startCheckCoasting) {
         coordinateLength = path.coordinate.length;
-        if (closestT > startCheckCoasting) {
+        if (closestT >= startCheckCoasting) {
             robot_velocity[0] = localization[3];
             robot_velocity[1] = localization[4];
             robot_velocity_magnitude = Math.hypot(robot_velocity[0],robot_velocity[1]);
@@ -68,6 +57,8 @@ public class PathFollower extends RobotPart {
 
         if (predictedStoppingVectorMagnitude > distanceToEndPoint(localization, path.lastPoint()) && endSpline) {
             predictedStopPosition = new double[]{predictedStoppingVector[0] + localization[0], predictedStoppingVector[1] + localization[1], localization[2]};
+
+            //TODO: this might not work because predictedStopPosition keeps refreshing.
             return p2p.followPID(predictedStopPosition, path.lastPoint(),endHeading);
         } else {
             //Calculates the point on the path closest to the robot, using the cached table.
@@ -93,8 +84,7 @@ public class PathFollower extends RobotPart {
             relative_pos = (coordinate[0] - localization[0]) + (coordinate[1] - localization[1]);
 
             Fcent = Fcent_weight * Math.pow(robot_velocity_magnitude, 2) / path.r_circle[closestT];
-            Ftrans =  p2p.followPID(localization,coordinate,(derivative[1]/derivative[0]))[0]; //return the translationalpower between currentPos and closestPathPoint
-            //Ftrans = -Math.sqrt(shortest_dist) * Ftrans_weight;
+            Ftrans = translational.calculate(Math.sqrt(shortest_dist));
 
             if (d2 < 0) Fcent *= -1;
             if ((d2 < 0 && relative_pos < 0) || (d2 > 0 && relative_pos > 0)) Ftrans *= -1;
@@ -104,18 +94,31 @@ public class PathFollower extends RobotPart {
             else if (Fcorr < 1) Fcorr = -1;
             else corrPower = Fcorr;
 
-            drivePower = max_speed;
-
-            theta1 = Math.asin(Fcorr/max_speed);
-            theta2 = Math.toRadians(localization[2]);
+            //TODO: better names? Another option is deletion, you only use them once.
+            theta1 = Math.asin(Fcorr / maxSpeed);
+            theta2 = localization[2];
             theta4 = Math.atan(derivative[1] / derivative[0]);
 
             driveAngle = 0.5*Math.PI - theta1 - theta2 + theta4;
             if (headingLocked) rotatePower = rotate.calculate(localization[2],endHeading);
-            else rotatePower = rotate.calculate(localization[2],driveAngle); //TODO: tune PID
-                                                                            //Heb je nu toch al? Of wil je t met de class doen
-            return new double[] {drivePower,driveAngle,rotatePower};
+            else rotatePower = rotate.calculate(localization[2],driveAngle); //TODO: tune PD (can probably copy from P2P).
+            return new double[] {maxSpeed,driveAngle,rotatePower};
         }
     }
+
+    /**
+     * TODO: documentation
+     * @param path
+     * @param localization
+     * @param endSpline
+     * @return
+     */
+    public double[] followPath(PathBuilder path, double[] localization, boolean endSpline) {
+        return followPath(path, localization,1,endSpline, false, 0, 90);
+    }
+
+    /**
+     * You have to have this function to extend RobotPart because RobotPart extends LinearOpMode. It doesn't do anything, I believe.
+     */
     public void runOpMode() {}
 }

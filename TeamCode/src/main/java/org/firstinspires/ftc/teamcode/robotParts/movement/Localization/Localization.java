@@ -37,7 +37,8 @@ public class Localization {
      * <p>It is very important to spend enough time on your tuning. If the earlier steps are not accurate, the later steps also won't be.</p><p></p>
      * <h3>Step 0</h3>
      * <p>Get a caliper and add values for Lx, Ly, Rx, Ry, Bx, By. Also add values for your gear ratio, ticks per rotation and (odometry) wheel radius.
-     * These values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.</p><p></p>
+     * These values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.
+     * Replace the keyword 'final' from line 19 and line 23 with 'public static'</p><p></p>
      * <h3><a href="#getPositionsTune()">Step 1</a></h3>
      * <p>Equal your odometers to the motors they're plugged into. Check if the odometer directions are good.
      * If you move the wheels manually, do they increase like they should, or do they decrease?
@@ -54,6 +55,8 @@ public class Localization {
      * <p>The next step is to get the real value for your Bx. Rotate the robot a full rotation, which should mean your back encoder is in the same spot as it started.
      * If your Y value does not return to zero, Bx needs to be changed. If Y is too high, increase/decrease Bx.</p><p></p>
      * TODO: if too large increase/decrease Bx (also add this to README.md and LocalizationTuner.java).
+     * <h3>Step 5</h3>
+     * <p>You should be done tuning. Change the public static variables back to final.</p>
      * @return An array containing the global X and Y coordinates and heading of the robot on the field.
      */
     public double[] arcVelocity() {

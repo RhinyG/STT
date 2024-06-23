@@ -58,7 +58,7 @@ public class demoDrive extends LinearOpMode {
                     if (bezierFollower.distanceToEndPoint(position, path1.lastPoint()) < 1) driveState++;
                     break;
                 case 2:
-                    outputFollower = bezierFollower.followPath(path2, position, true, true, Math.toRadians(90),90);
+                    outputFollower = bezierFollower.followPath(path2, position,1, true, true, Math.toRadians(90),90);
 //                    if (arm.isDone){driveState++;}
                     break;
                 case 3:

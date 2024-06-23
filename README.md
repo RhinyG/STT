@@ -35,7 +35,7 @@ Firstly, you should tune your drivetrain and the config file on the Driver Hub.
 * For differential swerve, tune [DifferentialDrivetrain](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/robotParts/movement/motorKinematics/DifferentialDrivetrain.java) by using (as of now non-existent).
 * For coaxial swerve, tune [CoaxialDrivetrain](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/robotParts/movement/motorKinematics/CoaxialDrivetrain.java) by using (as of now non-existent).
 
-Then, you should tune the [localization algorithm](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/robotParts/movement/Localization/localization.java) by using [LocalizationTuner](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/robotParts/movement/Tuner/LocalizationTuner.java).
+Then, you should tune the [localization algorithm](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/robotParts/movement/Localization/Localization.java) by using [LocalizationTuner](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/robotParts/movement/Tuner/ArcLocalizationTuner.java).
 
 It is very important to spend enough time on your tuning. If the earlier steps are not accurate, the later steps also won't be.
 
@@ -44,6 +44,8 @@ It is very important to spend enough time on your tuning. If the earlier steps a
 Get a caliper and add values for Lx, Ly, Rx, Ry, Bx, By. Also add values for your gear ratio, ticks per rotation and (odometry) wheel radius.
 
 These values should be known for the hardware you use. Also make sure the back odometer is a reasonable distance from your turn axle.
+
+Replace the keyword 'final' from Localization.java:19 and Localization.java:23 with 'public static'
 
 * Step 1
 
@@ -72,3 +74,7 @@ and compare how much your theta is versus how much it should be. If the number i
 The next step is to get the real value for your Bx. Rotate the robot a full rotation, which should mean your back encoder is in the same spot as it started.
 
 If your Y value does not return to zero, Bx needs to be changed. If Y is too high, increase/decrease Bx.
+
+* Step 5
+
+You should be done tuning. Change the public static variables back to final.
