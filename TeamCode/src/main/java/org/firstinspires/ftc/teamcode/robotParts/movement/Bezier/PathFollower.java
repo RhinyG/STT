@@ -47,7 +47,7 @@ public class PathFollower extends RobotPart {
      * @param headingLocked
      * @param endHeading
      * @param startCheckCoasting
-     * @return An array with a maxSpeed, a TODO: robotCentric or fieldCentric? driveAngle and a rotation PD-controlled power.
+     * @return An array with a maxSpeed, a driveAngle and a rotation PD-controlled power.
      */
     public double[] followPath(PathBuilder path, double[] localization, double maxSpeed, boolean endSpline, boolean headingLocked, double endHeading, int startCheckCoasting) {
         coordinateLength = path.coordinate.length;
@@ -62,7 +62,6 @@ public class PathFollower extends RobotPart {
         if (predictedStoppingVectorMagnitude > distanceToEndPoint(localization, path.lastPoint()) && endSpline) {
             predictedStopPosition = new double[]{predictedStoppingVector[0] + localization[0], predictedStoppingVector[1] + localization[1], localization[2]};
 
-            //TODO: this might not work because predictedStopPosition keeps refreshing.
             return p2p.followPID(predictedStopPosition, path.lastPoint(),endHeading);
         } else {
             //Calculates the point on the path closest to the robot, using the cached table.
@@ -115,7 +114,7 @@ public class PathFollower extends RobotPart {
      * @param path
      * @param localization
      * @param endSpline
-     * @return An array with a maxSpeed, a TODO: robotCentric or fieldCentric? driveAngle and a rotation PD-controlled power.
+     * @return An array with a maxSpeed, a driveAngle and a rotation PD-controlled power.
      */
     public double[] followPath(PathBuilder path, double[] localization, boolean endSpline) {
         return followPath(path, localization,1,endSpline, false, 0, 90);
