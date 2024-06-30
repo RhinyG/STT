@@ -39,15 +39,16 @@ public class ArcLocalizationTuner extends LinearOpMode {
 
         int state = 0;
 
+        telemetry.addLine("You can test your tuning right now");
+        telemetry.addLine("Step 1: press X/□");
+        telemetry.addLine("Step 2: press Y/△");
+        telemetry.addLine("Step 3: press B/○");
+        telemetry.addLine("Step 4: press A/X");
+
         waitForStart();
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            telemetry.addLine("You can test your tuning right now");
-            telemetry.addLine("Step 1: press X/□");
-            telemetry.addLine("Step 2: press Y/△");
-            telemetry.addLine("Step 3: press B/○");
-            telemetry.addLine("Step 4: press A/X");
             if (gamepad1.x) {
                 state = 1;
                 odom.leftOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -57,7 +57,8 @@ public class Localization {
      * TODO: if too large increase/decrease Bx (also add this to README.md and LocalizationTuner.java).
      * <h3>Step 5</h3>
      * <p>You should be done tuning. Change the public static variables back to final.</p>
-     * @return An array containing the global X and Y coordinates and heading of the robot on the field.
+     * @return An array containing the global X [0] and Y [1] coordinates and heading [2] of the robot on the field.
+     * Also contains the X [3] and Y [4] speed components.
      */
     public double[] arcVelocity() {
         //Moves the current values to the old ones.

@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.robotParts.RobotPart;
 import org.firstinspires.ftc.teamcode.robotParts.movement.PID2Point.pidFollower;
 
 public class PathFollower extends RobotPart {
+    //TODO: variable documentation
+    //TODO: not everything has to be a double
     //TODO: make final after tuning
     public static double Fcent_weight, rotateP, rotateD, translationalP, translationD, decelerationConstant = 0.0007;
     double[] coordinate, derivative, sec_derivative;
@@ -19,7 +21,6 @@ public class PathFollower extends RobotPart {
     double Fcent, Ftrans, Fcorr;
     double corrPower, driveAngle, rotatePower;
     double theta1, theta2, theta4;
-    double[] robot_velocity = new double[2];
     double robot_velocity_magnitude;
     double predictedStoppingScalar, predictedStoppingVectorMagnitude;
     double[] predictedStoppingVector, predictedStopPosition;
@@ -41,17 +42,15 @@ public class PathFollower extends RobotPart {
      * @param headingLocked
      * @param endHeading
      * @param startCheckCoasting
-     * @return
+     * @return An array with a maxSpeed, a TODO: robotCentric or fieldCentric? driveAngle and a rotation PD-controlled power.
      */
     public double[] followPath(PathBuilder path, double[] localization, double maxSpeed, boolean endSpline, boolean headingLocked, double endHeading, int startCheckCoasting) {
         coordinateLength = path.coordinate.length;
         if (closestT >= startCheckCoasting) {
-            robot_velocity[0] = localization[3];
-            robot_velocity[1] = localization[4];
-            robot_velocity_magnitude = Math.hypot(robot_velocity[0],robot_velocity[1]);
+            robot_velocity_magnitude = Math.hypot(localization[3],localization[4]);
 
             predictedStoppingScalar = robot_velocity_magnitude/decelerationConstant;
-            predictedStoppingVector = new double[]{robot_velocity[0] * predictedStoppingScalar, robot_velocity[1] * predictedStoppingScalar};
+            predictedStoppingVector = new double[]{localization[3] * predictedStoppingScalar, localization[4] * predictedStoppingScalar};
             predictedStoppingVectorMagnitude = Math.hypot(predictedStoppingVector[0], predictedStoppingVector[1]);
         } else predictedStoppingVectorMagnitude = 0;
 
@@ -111,7 +110,7 @@ public class PathFollower extends RobotPart {
      * @param path
      * @param localization
      * @param endSpline
-     * @return
+     * @return An array with a maxSpeed, a TODO: robotCentric or fieldCentric? driveAngle and a rotation PD-controlled power.
      */
     public double[] followPath(PathBuilder path, double[] localization, boolean endSpline) {
         return followPath(path, localization,1,endSpline, false, 0, 90);

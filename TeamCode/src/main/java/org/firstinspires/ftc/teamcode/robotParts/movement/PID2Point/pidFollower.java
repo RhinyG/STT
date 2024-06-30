@@ -23,15 +23,22 @@ public class pidFollower extends RobotPart {
         telemetry = opmode.telemetry;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
-    //TODO: documentation
-    public double[] followPID(double[] startPosition, double[] endPosition, double targetHeading) {
+
+    /**
+     * TODO: documentation
+     * @param localization
+     * @param targetPosition
+     * @param targetHeading
+     * @return An array with a maxSpeed, a TODO: robotCentric or fieldCentric? driveAngle and a rotation PD-controlled power.
+     */
+    public double[] followPID(double[] localization, double[] targetPosition, double targetHeading) {
         drive.setPID(driveP,driveI,driveD);//TODO: you might be able to delete this step, according to https://docs.ftclib.org/ftclib/features/controllers
         rotate.setPID(rotateP,rotateI,rotateD);
 
-        drivePower = drive.calculate(distanceToEndPoint(startPosition, endPosition), 0);
-        rotatePower = rotate.calculate(startPosition[2],targetHeading); //startPosition[2] was eerst endPosition[2]
+        drivePower = drive.calculate(distanceToEndPoint(localization, targetPosition), 0);
+        rotatePower = rotate.calculate(localization[2],targetHeading); //localization[2] used to be targetPosition[2]
 
-        driveAngle = Math.atan2(endPosition[1],endPosition[0]);
+        driveAngle = Math.atan2(targetPosition[1] - localization[1],targetPosition[0] - localization[0]) - localization[2];
 
         telemetry();
         return new double[] {drivePower, driveAngle, rotatePower};

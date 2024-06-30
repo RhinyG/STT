@@ -62,6 +62,13 @@ public class MecanumDrivetrain extends RobotPart {
     }
 
     /**
+     * This is more useful for use in OpModes.
+     * @param values An array containing a drivePower, driveAngle and rotatePower.
+     * @see <a href="#drive(double[], double)">drive()</a>, values follows the same limitations.
+     */
+    public void drive(double[] values) {drive(new double[] {values[0], values[1]}, values[2]);}
+
+    /**
      * <p>This method does the kinematics to transfer a drive vector and a rotate power into usable motor powers for a mecanum drivetrain.
      * It also corrects for the friction in mecanum wheels which causes forward to be quicker than strafe.
      * Within the method, there is documentation for what each line does.

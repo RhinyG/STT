@@ -6,11 +6,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
-//TODO: delete if tuner file works.
+//TODO: delete if ArcLocalizationTuner.java works.
 @Config
 @TeleOp(name = "Localization Test", group = "Tests")
 public class LocalizationTest extends LinearOpMode {
@@ -25,9 +24,9 @@ public class LocalizationTest extends LinearOpMode {
 
         Localization odom = new Localization(FrontL,BackL,FrontR, true);
 
-        odom.leftOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odom.rightOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odom.backOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        odom.leftOdo.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        odom.rightOdo.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        odom.backOdo.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
