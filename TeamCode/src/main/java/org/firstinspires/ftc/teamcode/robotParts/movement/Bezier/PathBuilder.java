@@ -11,7 +11,6 @@ public class PathBuilder {
     public PathBuilder(double[][] points) {
         controlPoints = points;
         n = controlPoints.length;
-
     }
 
     public PathBuilder buildPath() {

@@ -21,14 +21,13 @@ public class PIDtoPointTuner extends LinearOpMode {
     public static int state = 0;
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         MecanumDrivetrain drive = new MecanumDrivetrain(this);
 
         Localization odom = new Localization(drive.FrontL,drive.BackL,drive.FrontR,true);
 
         pidFollower pid = new pidFollower(this);
-
-        //TODO: we also do this within each added class (like odom), is that necessary?
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 

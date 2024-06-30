@@ -15,10 +15,10 @@ import java.util.List;
 public class MecanumDriveTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         double[] driveVector;
         MecanumDrivetrain drive = new MecanumDrivetrain(this);
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 

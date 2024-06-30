@@ -11,7 +11,13 @@ import org.firstinspires.ftc.teamcode.robotParts.RobotPart;
 public class pidFollower extends RobotPart {
     Telemetry telemetry;
     double drivePower,driveAngle,rotatePower;
-    public static double driveP = 0.0025, driveI = 0.001, driveD = 0.00004, rotateP = 0.0025, rotateI = 0.001, rotateD = 0.00004;
+    public static double
+            driveP = 0.0025,
+            driveI = 0.001,
+            driveD = 0.00004,
+            rotateP = 0.0025,
+            rotateI = 0.001,
+            rotateD = 0.00004;
     PIDController drive = new PIDController(driveP, driveI, driveD), rotate = new PIDController(rotateP,rotateI,rotateD);
     double[] position;
 
@@ -21,7 +27,6 @@ public class pidFollower extends RobotPart {
      */
     public pidFollower(LinearOpMode opmode) {
         telemetry = opmode.telemetry;
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     /**

@@ -28,7 +28,6 @@ public class DifferentialDrivetrain extends RobotPart {
     public DifferentialDrivetrain(LinearOpMode opmode) {
         telemetry = opmode.telemetry;
         myOpMode = opmode;
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     /**

@@ -34,7 +34,6 @@ public class MecanumDrivetrain extends RobotPart {
     public MecanumDrivetrain(LinearOpMode opmode) {
         telemetry = opmode.telemetry;
         myOpMode = opmode;
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     /**

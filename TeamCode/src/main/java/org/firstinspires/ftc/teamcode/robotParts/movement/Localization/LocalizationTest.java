@@ -16,6 +16,8 @@ public class LocalizationTest extends LinearOpMode {
     double[] position;
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         DcMotorEx FrontL,FrontR,BackL;
 
         FrontL = hardwareMap.get(DcMotorEx.class, "left_front");
@@ -27,8 +29,6 @@ public class LocalizationTest extends LinearOpMode {
         odom.leftOdo.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         odom.rightOdo.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         odom.backOdo.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 

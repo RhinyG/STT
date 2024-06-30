@@ -19,6 +19,7 @@ import java.util.List;
 public class demoDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         MecanumDrivetrain drive = new MecanumDrivetrain(this);
         Localization odom = new Localization(drive.FrontL, drive.BackL, drive.FrontR, true);
@@ -31,7 +32,6 @@ public class demoDrive extends LinearOpMode {
         PathBuilder path2 = new PathBuilder(new double[][]{path1.lastPoint(), {0, 50}, {-50, 50}}).buildPath();
         PathBuilder path3 = new PathBuilder(path2.reversePoints());
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 

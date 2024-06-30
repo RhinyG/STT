@@ -12,9 +12,15 @@ public class PathFollower extends RobotPart {
     //TODO: variable documentation
     //TODO: not everything has to be a double
     //TODO: make final after tuning
-    public static double Fcent_weight, rotateP, rotateD, translationalP, translationD, decelerationConstant = 0.0007;
+    public static final double
+            Fcent_weight = 0.001,
+            rotateP = 0,
+            rotateD = 0,
+            translationalP = 0,
+            translationD = 0,
+            decelerationConstant = 0.0007;
     double[] coordinate, derivative, sec_derivative;
-    double coordinateLength;
+    int coordinateLength;
     double trans_dist, shortest_dist, relative_pos;
     int closestT;
     double d2;
@@ -29,7 +35,6 @@ public class PathFollower extends RobotPart {
     public PathFollower(LinearOpMode opmode) {
         myOpMode = opmode;
         telemetry = opmode.telemetry;
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
     pidFollower p2p = new pidFollower(myOpMode);
 

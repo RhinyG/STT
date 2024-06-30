@@ -22,12 +22,11 @@ public class PathFollowerConstantsTuner extends LinearOpMode {
     public static double decelerationConstant = 0.0008;
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         MecanumDrivetrain drive = new MecanumDrivetrain(this);
 
         Localization odom = new Localization(drive.FrontL,drive.BackL,drive.FrontR,true);
-
-        //TODO: we also do this within each added class (like odom), is that necessary?
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 

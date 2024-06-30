@@ -16,11 +16,11 @@ public class Localization {
             backOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
-    final double[]
+    public static final double[]
             L = {-2.6, 16.5},
             R = {-2.6,-8},
             B = {17, -2.5};
-    final double
+    public static final double
             WHEEL_RADIUS = 48,//odometry wheel radius in millimeters
             GEAR_RATIO = 1/13.7,//TODO: wait what this shouldn't have any effect on odometry?
             TICKS_PER_ROTATION = 8192,

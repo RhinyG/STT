@@ -27,7 +27,6 @@ public class CoaxialDrivetrain extends RobotPart {
     public CoaxialDrivetrain(LinearOpMode opmode) {
         myOpMode = opmode;
         telemetry = opmode.telemetry;
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     /**

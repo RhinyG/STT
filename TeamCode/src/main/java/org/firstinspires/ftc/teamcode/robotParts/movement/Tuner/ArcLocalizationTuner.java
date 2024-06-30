@@ -19,17 +19,15 @@ public class ArcLocalizationTuner extends LinearOpMode {
     double[] values;
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         DcMotorEx FrontL,FrontR,BackL;
 
         FrontL = hardwareMap.get(DcMotorEx.class, "left_front");
         FrontR = hardwareMap.get(DcMotorEx.class, "right_front");
         BackL = hardwareMap.get(DcMotorEx.class, "left_back");
 
-        //TODO: make the variables you're tuning final, that should speed up tuning.
         Localization odom = new Localization(FrontL,BackL,FrontR,true);
-
-        //TODO: we also do this within each added class (like odom), is that necessary?
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
